@@ -1,0 +1,6 @@
+# vscode
+.vscode/
+redis/data/
+.DS_Store
+.idea
+.venv/
