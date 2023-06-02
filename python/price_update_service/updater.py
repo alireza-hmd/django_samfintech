@@ -28,14 +28,18 @@ with open('price_data.csv') as data_file:
 
 for stock in stock_price_list:
     stock_item = json.loads(r.get(stock))
+    stock_item['price_changed'] = False
     for time in stock_price_list[stock]:
         total_price, count = stock_price_list[stock][time]
         if time in stock_item['time']:
             index = stock_item['time'].index(time)
-            stock_item['price'][index] = total_price/count
+            if stock_item['price'][index] != total_price / count:
+                stock_item['price'][index] = total_price / count
+                stock_item['price_changed'] = True
         else:
             stock_item['time'].append(time)
             stock_item['price'].append(total_price/count)
+            stock_item['price_changed'] = True
 
     r.set(stock, json.dumps(stock_item))
     print(r.get(stock), '\n')
