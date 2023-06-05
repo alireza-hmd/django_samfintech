@@ -1,6 +1,7 @@
 import json
 import redis
 from kafka import KafkaConsumer
+from kafka import TopicPartition, OffsetAndMetadata
 
 REDIS_CONTAINER = 'redis_redis_1'
 r = redis.Redis(host='localhost', port=6379, db=0)
@@ -16,8 +17,8 @@ consumer = KafkaConsumer(
     topic,
     bootstrap_servers=['localhost:9092'],
     auto_offset_reset='earliest',
-    enable_auto_commit=True,
-    auto_commit_interval_ms=1000,
+    enable_auto_commit=False,
+    # auto_commit_interval_ms=1000,
     group_id='stocks',
     consumer_timeout_ms=1000,
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
@@ -34,6 +35,9 @@ for row in consumer:
             stock_price_list[row.value[1]][time][1] += 1
         else:
             stock_price_list[row.value[1]][time] = [int(row.value[2]), 1]
+    topic_partition = TopicPartition(row.topic, row.partition)
+    offset_and_metadata = OffsetAndMetadata(row.offset+1, row.timestamp)
+    consumer.commit({topic_partition: offset_and_metadata})
 
 for stock in stock_price_list:
     stock_item = json.loads(r.get(stock))

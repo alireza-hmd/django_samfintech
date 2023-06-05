@@ -6,7 +6,6 @@ from kafka import KafkaProducer
 REDIS_CONTAINER = 'redis_redis_1'
 r = redis.Redis(host='localhost', port=6379, db=0)
 
-
 def publish_message(producer_instance, topic_name, value):
     try:
         producer_instance.send(topic_name, value=value)
