@@ -1,21 +1,22 @@
 import json
 import redis
+import time
 from kafka import KafkaConsumer
 from kafka import TopicPartition, OffsetAndMetadata
 
-REDIS_CONTAINER = 'redis_redis_1'
-r = redis.Redis(host='localhost', port=6379, db=0)
+time.sleep(20)
+REDIS_CONTAINER = 'redis-redis-1'
+r = redis.Redis(host=REDIS_CONTAINER, port=6379, db=0)
 
 stock_price_list = {
     'stock1': {},
     'stock2': {},
     'stock3': {},
 }
-
 topic = 'main_topic'
 consumer = KafkaConsumer(
     topic,
-    bootstrap_servers=['localhost:9092'],
+    bootstrap_servers=['kafka-kafka-1:29092'],
     auto_offset_reset='earliest',
     enable_auto_commit=False,
     # auto_commit_interval_ms=1000,
@@ -23,12 +24,8 @@ consumer = KafkaConsumer(
     consumer_timeout_ms=1000,
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
 )
-
-line_count = 0
 for row in consumer:
-    if line_count == 0:
-        line_count += 1
-    else:
+    if row.value[1] != 'Stock':
         time = row.value[0][:2] + ':' + row.value[0][2:4]
         if stock_price_list[row.value[1]].get(time):
             stock_price_list[row.value[1]][time][0] += int(row.value[2])

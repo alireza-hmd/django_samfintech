@@ -3,7 +3,7 @@ import time
 import json
 import multiprocessing
 
-REDIS_CONTAINER = 'redis_redis_1'
+REDIS_CONTAINER = 'redis-redis-1'
 r = redis.Redis(host=REDIS_CONTAINER, port=6379, db=0)
 
 

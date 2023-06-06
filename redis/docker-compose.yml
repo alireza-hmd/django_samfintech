@@ -7,3 +7,8 @@ services:
       - ./data:/data
     ports:
       - "6379:6379"
+
+networks:
+  default:
+    external:
+      name: sam_net

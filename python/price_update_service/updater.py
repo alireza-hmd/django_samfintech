@@ -2,7 +2,7 @@ import csv
 import redis
 import json
 
-REDIS_CONTAINER = 'redis_redis_1'
+REDIS_CONTAINER = 'redis-redis-1'
 r = redis.Redis(host=REDIS_CONTAINER, port=6379, db=0)
 
 stock_price_list = {

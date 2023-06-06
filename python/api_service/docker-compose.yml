@@ -8,3 +8,8 @@ services:
      - .:/app
    ports:
      - 8000:8000
+
+networks:
+  default:
+    external:
+      name: sam_net

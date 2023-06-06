@@ -1,10 +1,13 @@
 import json
+import time
+
 import redis
 import csv
 from kafka import KafkaProducer
 
-REDIS_CONTAINER = 'redis_redis_1'
-r = redis.Redis(host='localhost', port=6379, db=0)
+REDIS_CONTAINER = 'redis-redis-1'
+r = redis.Redis(host=REDIS_CONTAINER, port=6379, db=0)
+
 
 def publish_message(producer_instance, topic_name, value):
     try:
@@ -18,7 +21,7 @@ def connect_kafka_producer():
     _producer = None
     try:
         _producer = KafkaProducer(
-            bootstrap_servers=['localhost:9092'],
+            bootstrap_servers=['kafka-kafka-1:29092'],
             value_serializer=lambda x: json.dumps(x).encode('utf-8')
         )
     except Exception as ex:
@@ -28,7 +31,7 @@ def connect_kafka_producer():
         return _producer
 
 
-with open('../../price_data.csv') as data_file:
+with open('price_data.csv') as data_file:
     stocks_data = csv.reader(data_file, delimiter=',')
     producer = connect_kafka_producer()
     topic = 'main_topic'

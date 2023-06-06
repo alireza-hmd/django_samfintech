@@ -7,8 +7,8 @@ from . import serializers
 import json
 import redis
 
-REDIS_CONTAINER = 'redis_redis_1'
-r = redis.Redis(host='localhost', port=6379, db=0)
+REDIS_CONTAINER = 'redis-redis-1'
+r = redis.Redis(host=REDIS_CONTAINER, port=6379, db=0)
 
 
 class StockView(APIView):
